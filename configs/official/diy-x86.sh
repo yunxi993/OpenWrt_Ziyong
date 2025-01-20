@@ -82,8 +82,7 @@ etc/init.d/network restart\n\n\
 # Remove snapshot tags
 sed -i 's,-SNAPSHOT,,g' include/version.mk
 sed -i 's,-SNAPSHOT,,g' package/base-files/image-config.in
-sed -i "s,OPENWRT_RELEASE=\"[^\"]*\",OPENWRT_RELEASE=\"$(date +"%y/%m/%d %H:%M") %D %V\",g" package/base-files/files/usr/lib/os-release
-echo "$(date +"%y/%m/%d %H:%M")"
+sed -i "s,OPENWRT_RELEASE=\"[^\"]*\",OPENWRT_RELEASE=\"%D %V $(date +"%y/%m/%d %H:%M")\",g" package/base-files/files/usr/lib/os-release
 #sed -i "s/DISTRIB_DESCRIPTION='*.*'/DISTRIB_DESCRIPTION='$(date +%Y-%m-%d)-%D %V %C'/g" package/base-files/files/etc/openwrt_release
 #sed -i "s/DISTRIB_REVISION='*.*'/DISTRIB_REVISION='(by Sil)-%R'/g" package/base-files/files/etc/openwrt_release
 #sed -i "s/OPENWRT_RELEASE=\"*.*\"/OPENWRT_RELEASE=\"$(date +%Y-%m-%d)-%D %V %C\"/g" package/base-files/files/usr/lib/os-release
@@ -103,11 +102,11 @@ fi
 #{ sleep 15; ethtool -A eth0 autoneg off rx on tx on; ethtool -A eth1 autoneg off rx on tx on; } &
 
 [ -f '/mnt/nvme0n1p3/passwall2' ] && cp -f '/mnt/nvme0n1p3/passwall2' '/etc/config/'
-[ -f '/mnt/nvme0n1p3/push_nft.rule' ] && cp -f '/mnt/nvme0n1p3/push_nft.rule' '/etc/nftables.d/'
+[ -f '/mnt/nvme0n1p3/push_nft.rule' ] && cp -f '/mnt/nvme0n1p3/push_nft.rule' '/etc/'
 [ -f '/mnt/nvme0n1p3/passwall2_server' ] && cp -f '/mnt/nvme0n1p3/passwall2_server' '/etc/config/'
 [ -f '/mnt/nvme0n1p3/ddns-go-config.yaml' ] && cp -f '/mnt/nvme0n1p3/ddns-go-config.yaml' '/etc/ddns-go/'
 
-sed -i -E '/(ethtool|passwall2|push|ddns|sed)/d' /etc/rc.local
+sed -i -E '/\(ethtool\|passwall2\|push\|ddns\|sed\)/d;/^$/d' /etc/rc.local
 
 exit 0
 '> ./package/base-files/files/etc/rc.local
